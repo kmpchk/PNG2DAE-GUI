@@ -53,6 +53,8 @@ private slots:
 
     void on_stlToDaeSelect_clicked();
 
+    void on_textureImageSelect_clicked();
+
 private:
 
     Ui::MainWindow *ui;
@@ -61,12 +63,12 @@ private:
     bool isXRotateFieldReadOnly = true;
     bool isWindowResized = false;
     int defWindowWidth = 281;
-    int defWindowHeight = 408;
+    int defWindowHeight = 448;
     int resizedWindowWidth = 500;
     QProcess* pExecutedProcess;
     QString buffer;
     std::shared_ptr<PROGRAM_DATA> pProgramData;
-    QString inputImageFilename, outputModelFilename, outputFolderPath;
+    QString inputImageFilename, outputModelFilename, outputFolderPath, inputTextureImageFilename;
 
     // define the methods to perform some acions
     void expandWindowSize();
