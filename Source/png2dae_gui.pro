@@ -24,6 +24,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+CONFIG += qt debug
+
+#CONFIG += static
+
+QMAKE_CXXFLAGS += -std=c++0x
+
+# ImageMagick settings
+
+INCLUDEPATH += /usr/include/ImageMagick-*
+LIBS += -lMagick++-6.Q16
+
 SOURCES += \
         main.cpp \
         mainwindow.cpp
