@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>286</width>
-    <height>408</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,7 +46,7 @@
       <x>20</x>
       <y>150</y>
       <width>251</width>
-      <height>151</height>
+      <height>181</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -228,6 +228,45 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QCheckBox" name="smoothingOptionCheckbox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>82</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Smoothing </string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="sharpnessOptionCheckbox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>82</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sharpness</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="textureImageSelect">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>150</y>
+       <width>81</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Select texture</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QLineEdit" name="outputFilenameEdit">
     <property name="geometry">
@@ -272,7 +311,7 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>310</y>
+      <y>340</y>
       <width>80</width>
       <height>25</height>
      </rect>
@@ -285,7 +324,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>340</y>
+      <y>370</y>
       <width>251</width>
       <height>23</height>
      </rect>
