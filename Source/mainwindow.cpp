@@ -9,7 +9,8 @@
 #include <QDebug>
 #include <QThread>
 #include <thread>
-#include <QtConcurrent/QtConcurrentRun>
+#include <QSysInfo>
+#include <ImageMagick-6/Magick++.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,7 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     pProgramData = std::make_shared<PROGRAM_DATA>();
 
-    this->setWindowFlags( Qt::Dialog | Qt::WindowTitleHint );
+    auto b = QSysInfo::buildCpuArchitecture();
+    QMessageBox::information(this, "..", b);
+
+    //this->setWindowFlags( Qt::Dialog | Qt::WindowTitleHint );
 
     //setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowMinimizeButtonHint);
 
@@ -120,6 +124,10 @@ void MainWindow::fillProgramDataStructure()
     pProgramData->inputImageFilename = inputImageFilename;
     pProgramData->outputFolderPath = outputFolderPath;
     pProgramData->outputModelFilename = outputModelFilename;
+    if(ui->smoothingOptionCheckbox->isChecked())
+        pProgramData->bSmoothingOption = true;
+    if(ui->sharpnessOptionCheckbox->isChecked())
+        pProgramData->bSharpnessOption = true;
     if(ui->grayscaleOptionCheckbox->isChecked())
         pProgramData->bGreyscaleOption = true;
     if(ui->colorInverseOptionCheckbox->isChecked())
@@ -155,15 +163,27 @@ void test()
     }
 }
 
+void MainWindow::on_textureImageSelect_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Open a texture file", "/home");
+    if(fileName.isNull() || fileName.isEmpty())
+        return;
+
+    inputTextureImageFilename = fileName;
+
+    QMessageBox::information(this, "..", inputTextureImageFilename);
+}
+
 void MainWindow::on_selectImageButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Open a file", "/home");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open a input file", "/home");
     if(fileName.isNull() || fileName.isEmpty())
         return;
 
     inputImageFilename = fileName;
 
     //QImage image(fileName);
+
 
     QMessageBox::information(this, "..", fileName);
     QPixmap pix(fileName);
