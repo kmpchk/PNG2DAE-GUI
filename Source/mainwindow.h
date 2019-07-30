@@ -3,10 +3,10 @@
 
 #include <QMainWindow>
 #include <QProcess>
-#include <QProgressBar>
-#include <QProgressDialog>
 #include <memory>
 #include "programdata.h"
+#include "thirdparty.h"
+#include "utils.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +38,22 @@ private slots:
 
     void on_xAxisRotateLabel_clicked();
 
+    void on_outputFolderSelect_clicked();
+
+    void on_pngToStlSelect_clicked();
+
+    void on_stlToDaeSelect_clicked();
+
+    void on_textureImageSelect_clicked();
+
+    void on_smoothingOptionCheckbox_clicked();
+
+    void on_sharpnessOptionCheckbox_clicked();
+
+    void on_colorInverseOptionCheckbox_clicked();
+
+    void on_grayscaleOptionCheckbox_clicked();
+
 
     //define the callbacks to handle process states (Start, Finish and ReadyStandartOutput)
 
@@ -47,13 +63,16 @@ private slots:
 
     void onReadOutput();
 
-    void on_outputFolderSelect_clicked();
+    void onSmoothingSliderValueChanged(int);
 
-    void on_pngToStlSelect_clicked();
+    void onSmoothingSpinBoxValueChanged(double);
 
-    void on_stlToDaeSelect_clicked();
+    void onSharpnessSliderValueChanged(int);
 
-    void on_textureImageSelect_clicked();
+    void onSharpnessSpinBoxValueChanged(double);
+
+    void onSharpnessSliderReleased();
+
 
 private:
 
@@ -62,13 +81,21 @@ private:
     bool isDimensionFieldReadOnly = true;
     bool isXRotateFieldReadOnly = true;
     bool isWindowResized = false;
-    int defWindowWidth = 281;
-    int defWindowHeight = 448;
-    int resizedWindowWidth = 500;
+    bool isSmoothingOption = false;
+    bool isSharpnessOption = false;
+    bool isColorInverseOption = false;
+    bool isGrayscaleOption = false;
+    double sharpnessValue, smoothingValue;
     QProcess* pExecutedProcess;
     QString buffer;
+    QImage readImage, changedAfterSmoothingImage, changedAfterSharpnessImage;
     std::shared_ptr<PROGRAM_DATA> pProgramData;
-    QString inputImageFilename, outputModelFilename, outputFolderPath, inputTextureImageFilename;
+    QString inputImageFilename = "", outputModelFilename, outputFolderPath, inputTextureImageFilename;
+    QString imageFileName;
+    //Magick::Image inputImageManipulatorPtr;
+    //Magick::Image testImage;
+    //Magick::Blob testBlob;
+    //std::shared_ptr<Magick::Image> inputImageManipulator;
 
     // define the methods to perform some acions
     void expandWindowSize();
@@ -77,6 +104,13 @@ private:
 
     void fillProgramDataStructure();
     void showParameters();
+    bool isRequiredFieldsFilled();
+    void setSmoothing(double value);
+    void setSharpness(double value);
+    void updateImageView();
+    //void sharpenImage(QImage& image, double sigma, double alpha);
+    //void secondDerivImage(QImage& image, double sigma);
+    //void separableGaussianBlurImage(QImage& image, double sigma);
 };
 
 #endif // MAINWINDOW_H
