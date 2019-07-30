@@ -2,7 +2,7 @@
 Graphical User Interface for console built version of PNG2DAE utility
 
 # Setup
-The project is standalone and does not require any libraries. 
+The project is standalone and does not require any Qt libraries. 
 ## Requirements
 - Qt 5.13.0 (source-based static assembly)
 ## Building
