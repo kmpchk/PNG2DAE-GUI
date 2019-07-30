@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
+    <width>564</width>
     <height>447</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>80</width>
+      <width>91</width>
       <height>25</height>
      </rect>
     </property>
@@ -32,8 +32,8 @@
      <rect>
       <x>280</x>
       <y>30</y>
-      <width>211</width>
-      <height>221</height>
+      <width>271</width>
+      <height>231</height>
      </rect>
     </property>
     <property name="text">
@@ -64,6 +64,9 @@
        <height>25</height>
       </rect>
      </property>
+     <property name="maxLength">
+      <number>3</number>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -73,7 +76,7 @@
       <rect>
        <x>120</x>
        <y>0</y>
-       <width>121</width>
+       <width>131</width>
        <height>23</height>
       </rect>
      </property>
@@ -81,7 +84,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set z-axis scale factor, which affects the height of output model (default = &lt;span style=&quot; font-family:'monospace';&quot;&gt;0.25&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Z axis scale coeff</string>
+      <string>Z axis scale</string>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -100,7 +103,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set xyz-axis scale factor, which affect the dimensions of output model (default = &lt;span style=&quot; font-family:'monospace';&quot;&gt;0.05&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>XYZ axis scale coeff</string>
+      <string>XYZ axis scale</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="dimensionScaleEdit">
@@ -111,6 +114,9 @@
        <width>113</width>
        <height>25</height>
       </rect>
+     </property>
+     <property name="maxLength">
+      <number>3</number>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -124,6 +130,9 @@
        <width>113</width>
        <height>25</height>
       </rect>
+     </property>
+     <property name="maxLength">
+      <number>3</number>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -142,7 +151,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set x-axis rotate angle (default = -90 degrees)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>X axis rotate angle</string>
+      <string>X axis rotate</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="grayscaleOptionCheckbox">
@@ -228,38 +237,12 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QCheckBox" name="smoothingOptionCheckbox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>120</y>
-       <width>82</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Smoothing </string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="sharpnessOptionCheckbox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>140</y>
-       <width>82</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Sharpness</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="textureImageSelect">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>150</y>
-       <width>81</width>
+       <x>10</x>
+       <y>130</y>
+       <width>91</width>
        <height>25</height>
       </rect>
      </property>
@@ -273,7 +256,7 @@
      <rect>
       <x>20</x>
       <y>110</y>
-      <width>101</width>
+      <width>231</width>
       <height>25</height>
      </rect>
     </property>
@@ -294,14 +277,14 @@
    <widget class="QCheckBox" name="showImageWindowCheckbox">
     <property name="geometry">
      <rect>
-      <x>151</x>
+      <x>150</x>
       <y>10</y>
-      <width>111</width>
+      <width>121</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Show the image windows</string>
+     <string>Show the image</string>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -372,6 +355,137 @@
      <string>!</string>
     </property>
    </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>270</y>
+      <width>271</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QSlider" name="smoothingSlider">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>121</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>50</number>
+     </property>
+     <property name="singleStep">
+      <number>1</number>
+     </property>
+     <property name="sliderPosition">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="smoothingSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>61</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <double>50.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="stepType">
+      <enum>QAbstractSpinBox::DefaultStepType</enum>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="smoothingOptionCheckbox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Smoothing </string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="sharpnessOptionCheckbox">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>10</y>
+       <width>82</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sharpness</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="sharpnessSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>40</y>
+       <width>62</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <double>50.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="stepType">
+      <enum>QAbstractSpinBox::DefaultStepType</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sharpnessSlider">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>70</y>
+       <width>121</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>50</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </widget>
+   <zorder>frame</zorder>
    <zorder>optionsViewFrame</zorder>
    <zorder>selectImageButton</zorder>
    <zorder>imageViewLabel</zorder>
