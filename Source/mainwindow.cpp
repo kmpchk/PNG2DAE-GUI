@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    if(pExecutedProcess)
+    if(pExecutedProcess != nullptr)
         delete pExecutedProcess;
 }
 
@@ -185,7 +185,10 @@ void MainWindow::onSmoothingSpinBoxValueChanged(double value)
 void MainWindow::onProcessFinished(int code)
 {
     buffer = pExecutedProcess->readAllStandardOutput();
-    qDebug() << buffer;
+    //qDebug() << buffer;
+
+    QFile(INPUT_IMAGE_PREPARED_NAME).remove();
+    QMessageBox::information(this, "Process output", buffer);
 
     ui->convertStatusProgressBar->setMaximum(1);
     ui->convertStatusProgressBar->setMinimum(0);
@@ -194,6 +197,7 @@ void MainWindow::onProcessFinished(int code)
 
     pExecutedProcess->close();
     delete pExecutedProcess;
+    pExecutedProcess = nullptr;
 }
 
 void MainWindow::onProcessStarted()
@@ -205,13 +209,14 @@ void MainWindow::onProcessStarted()
 
 void MainWindow::onReadOutput()
 {
-    //QString appStandartOutput = process.readAllStandardOutput();
+    //buffer = pExecutedProcess->readAllStandardOutput();
     //QMessageBox::information(this, "..", appStandartOutput);
 
-    while(pExecutedProcess->canReadLine())
+    /*while(pExecutedProcess->canReadLine())
     {
-        qDebug() << pExecutedProcess->readLine();
-    }
+        //qDebug() << pExecutedProcess->readLine();
+        QMessageBox::information(this, "Process ouput", pExecutedProcess->readLine());
+    }*/
 }
 
 void MainWindow::startProcess(QString app, QStringList args)
@@ -246,9 +251,44 @@ void MainWindow::showParameters()
     qDebug() << "Dimension coeff: " << pProgramData->dDimensionCoeff;
 }
 
+QStringList MainWindow::createArgs()
+{
+    QString argsCmdLine = "";
+    QStringList args;
+
+    args << "-i" << pProgramData->inputImageFilename;
+    args << "-o" << pProgramData->outputModelFilename;
+    args << "-f" << pProgramData->outputFolderPath;
+    args << "-t" << pProgramData->inputTextureImageFilename;
+    // check convert mode
+    switch (pProgramData->convertMode)
+    {
+        case 0:
+            args << "-k";
+            break;
+        case 1:
+            args << "-p";
+            break;
+        case 2:
+            args << "-s";
+            break;
+        default:
+            args << "-k";
+            break;
+    }
+    if(pProgramData->bColorInverseOption)
+        args << "-c";
+    if(pProgramData->bGrayscaleOption)
+        args << "-g";
+    args << "-z" << pProgramData->dZetAxisCoeff;
+    args << "-l" << pProgramData->dDimensionCoeff;
+    args << "-x" << pProgramData->dXAxisRotateAngle;
+    return args;
+}
+
 bool MainWindow::isRequiredFieldsFilled()
 {
-    bool isInputImageSelected = !inputImageFilename.isEmpty();
+    bool isInputImageSelected = !inputDataFilename.isEmpty();
     bool isOutputModelFilenamePresented = !outputModelFilename.isEmpty();
     bool isOutputFolderPathPresented = !outputFolderPath.isEmpty();
 
@@ -260,9 +300,13 @@ void MainWindow::fillProgramDataStructure()
     outputModelFilename = ui->outputFilenameEdit->text();
     if(outputModelFilename.isNull() || outputModelFilename.isEmpty())
         return;
-    pProgramData->inputImageFilename = QFileInfo(INPUT_IMAGE_PREPARED_NAME).absoluteFilePath();
+    if(inputFileType == INPUT_FILE_TYPE::IMAGE)
+        pProgramData->inputImageFilename = QFileInfo(INPUT_IMAGE_PREPARED_NAME).absoluteFilePath();
+    else
+        pProgramData->inputImageFilename = inputDataFilename;
     pProgramData->outputFolderPath = outputFolderPath;
     pProgramData->outputModelFilename = outputModelFilename;
+    pProgramData->inputTextureImageFilename = inputTextureImageFilename;
     pProgramData->bSmoothingOption = isSmoothingOption;
     if(ui->smoothingOptionCheckbox->isChecked())
         pProgramData->dSmoothingCoeff = ui->smoothingSpinBox->value();
@@ -272,35 +316,45 @@ void MainWindow::fillProgramDataStructure()
     pProgramData->bGrayscaleOption = isGrayscaleOption;
     pProgramData->bColorInverseOption = isColorInverseOption;
     if(ui->zAxisScaleLabel->isChecked() && !ui->zAxisScaleEdit->text().isEmpty())
-        pProgramData->dZetAxisCoeff = ui->zAxisScaleEdit->text().toDouble();
+        pProgramData->dZetAxisCoeff = ui->zAxisScaleEdit->text().replace(",", ".");
     if(ui->xAxisRotateLabel->isChecked() && !ui->xAxisRotateEdit->text().isEmpty())
-        pProgramData->dXAxisRotateAngle = ui->xAxisRotateEdit->text().toDouble();
+        pProgramData->dXAxisRotateAngle = ui->xAxisRotateEdit->text().replace(",", ".");
     if(ui->dimensionScaleLabel->isChecked() && !ui->dimensionScaleEdit->text().isEmpty())
-        pProgramData->dDimensionCoeff = ui->dimensionScaleEdit->text().toDouble();
+        pProgramData->dDimensionCoeff = ui->dimensionScaleEdit->text().replace(",", ".");
 }
 
 void MainWindow::on_convertStartButton_clicked()
 {
     if(!isRequiredFieldsFilled())
     {
-        QMessageBox::critical(this, "A error message", "Not all required fields are filled!");
+        QMessageBox::critical(this, "Error", "Complete the required fields!");
         return;
     }
 
-    sharpnessValue = ui->sharpnessSpinBox->value();
-    smoothingValue = ui->smoothingSpinBox->value();
+    if(inputFileType == INPUT_FILE_TYPE::IMAGE)
+    {
+        sharpnessValue = ui->sharpnessSpinBox->value();
+        smoothingValue = ui->smoothingSpinBox->value();
 
-    QImage image(readImage);
-    qt_blurImage(image, smoothingValue, true);
-    sharpenImage(image, 1.0, sharpnessValue);
-    png2dae::saveImage(image, INPUT_IMAGE_PREPARED_NAME);
+        QImage image(readImage);
+        qt_blurImage(image, smoothingValue, true);
+        sharpenImage(image, 1.0, sharpnessValue);
+        png2dae::saveImage(image, INPUT_IMAGE_PREPARED_NAME);
+    }
+    else
+    {
+
+    }
 
     fillProgramDataStructure();
     showParameters();
+    QStringList args = createArgs();
+    //qDebug() << args;
 
-    /*QStringList args;
-    args << "";
-    startProcess("testApp", args);*/
+    //QStringList args;
+    //args << "";
+    //QMessageBox::information(this, "..", args.join(" "));
+    startProcess("png2dae", args);
 }
 
 void test()
@@ -318,51 +372,76 @@ void test()
 
 void MainWindow::on_textureImageSelect_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Open a texture file", "/home");
+    QString selfilter = tr("InputFiles (*.jpg *.jpeg *.png");
+    QString sc = tr("Images (*.jpg *.jpeg *.png)");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open a texture file", "/home", sc, &selfilter);
     if(fileName.isNull() || fileName.isEmpty())
         return;
 
     inputTextureImageFilename = fileName;
 
-    QMessageBox::information(this, "..", inputTextureImageFilename);
+    QMessageBox::information(this, "Texture selection", inputTextureImageFilename);
 }
 
 void MainWindow::on_selectImageButton_clicked()
 {
-    QString fileNamePath = QFileDialog::getOpenFileName(this, "Open a input file", "/home");
+    QString selfilter = tr("InputFiles (*.jpg *.jpeg *.png *.stl)");
+    QString sc = tr("Images (*.jpg *.jpeg *.png);;STL (*.stl)");
+    QString fileNamePath = QFileDialog::getOpenFileName(this, "Open an input file", "/home", sc, &selfilter);
     if(fileNamePath.isNull() || fileNamePath.isEmpty())
         return;
-
-    readImage.load(fileNamePath);
-    /*inputImageManipulatorPtr.read(fileNamePath.toStdString());
-    if(!inputImageManipulatorPtr.isValid())
-    {
-        QMessageBox::critical(this, "An error", "Invalid file read");
-        return;
-    }*/
-    changedAfterSmoothingImage = readImage;
-    changedAfterSharpnessImage = readImage;
     QFileInfo fi(fileNamePath);
+    QString extesion = fi.fileName().right(fi.fileName().lastIndexOf("."));
     QString fileName = fi.fileName();
     QString fileNameWithoutExtension = fileName.left(fileName.lastIndexOf("."));
     ui->outputFilenameEdit->setText(fileNameWithoutExtension);
-    outputModelFilename = fileNameWithoutExtension;
-
-    inputImageFilename = fileNamePath;
-    imageFileName = fileName;
-
-    //QImage image(fileName);
-
-    //ui->imageViewLabel->setFixedSize(readImage.width(), readImage.height());
-
-    QMessageBox::information(this, "..", fileNamePath);
-    QPixmap pix(fileNamePath);
-    ui->imageViewLabel->setPixmap(pix.scaled(INPUT_IMAGE_VIEW_WIDTH, INPUT_IMAGE_VIEW_HEIGHT));
-
-    if(!isWindowResized)
+    if(extesion != ".stl")
     {
-        ui->showImageWindowCheckbox->setHidden(false);
-        ui->showImageWindowCheckbox->click();
+        ui->pngToDaeSelect->setEnabled(true);
+        ui->pngToStlSelect->setEnabled(true);
+        ui->stlToDaeSelect->setEnabled(false);
+        ui->pngToDaeSelect->click();
+
+        readImage.load(fileNamePath);
+        /*inputImageManipulatorPtr.read(fileNamePath.toStdString());
+        if(!inputImageManipulatorPtr.isValid())
+        {
+            QMessageBox::critical(this, "An error", "Invalid file read");
+            return;
+        }*/
+        changedAfterSmoothingImage = readImage;
+        changedAfterSharpnessImage = readImage;
+        outputModelFilename = fileNameWithoutExtension;
+        inputDataFilename = fileNamePath;
+        imageFileName = fileName;
+
+        //QImage image(fileName);
+
+        //ui->imageViewLabel->setFixedSize(readImage.width(), readImage.height());
+
+        //QMessageBox::information(this, "..", fileNamePath);
+        QPixmap pix(fileNamePath);
+        ui->imageViewLabel->setPixmap(pix.scaled(INPUT_IMAGE_VIEW_WIDTH, INPUT_IMAGE_VIEW_HEIGHT));
+
+        if(!isWindowResized)
+        {
+            ui->showImageWindowCheckbox->setHidden(false);
+            ui->showImageWindowCheckbox->click();
+        }
+    }
+    else
+    {
+        ui->pngToDaeSelect->setEnabled(false);
+        ui->pngToStlSelect->setEnabled(false);
+        ui->stlToDaeSelect->setEnabled(true);
+        ui->stlToDaeSelect->click();
+
+        ui->showImageWindowCheckbox->setHidden(true);
+
+        inputFileType = INPUT_FILE_TYPE::STL;
+        inputDataFilename = fileNamePath;
+        ui->outputFilenameEdit->setText(fileNameWithoutExtension);
+        outputModelFilename = fileNameWithoutExtension;
     }
 }
 
@@ -406,16 +485,19 @@ void MainWindow::on_outputFolderSelect_clicked()
 void MainWindow::on_pngToDaeSelect_clicked()
 {
     pProgramData->convertMode = 0;
+    ui->textureImageSelect->setEnabled(true);
 }
 
 void MainWindow::on_pngToStlSelect_clicked()
 {
     pProgramData->convertMode = 1;
+    ui->textureImageSelect->setEnabled(false);
 }
 
 void MainWindow::on_stlToDaeSelect_clicked()
 {
     pProgramData->convertMode = 2;
+    ui->textureImageSelect->setEnabled(true);
 }
 
 void MainWindow::on_smoothingOptionCheckbox_clicked()
@@ -434,10 +516,10 @@ void MainWindow::on_sharpnessOptionCheckbox_clicked()
 
 void MainWindow::on_colorInverseOptionCheckbox_clicked()
 {
-    isGrayscaleOption = !isGrayscaleOption;
+    isColorInverseOption = !isColorInverseOption;
 }
 
 void MainWindow::on_grayscaleOptionCheckbox_clicked()
-{
-    isColorInverseOption = !isColorInverseOption;
+{    
+    isGrayscaleOption = !isGrayscaleOption;
 }

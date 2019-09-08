@@ -76,6 +76,11 @@ private slots:
 
 private:
 
+    typedef enum _INPUT_FILE_TYPE
+    {
+        STL, IMAGE
+    } INPUT_FILE_TYPE;
+
     Ui::MainWindow *ui;
     bool isZFieldReadOnly = true;
     bool isDimensionFieldReadOnly = true;
@@ -86,11 +91,12 @@ private:
     bool isColorInverseOption = false;
     bool isGrayscaleOption = false;
     double sharpnessValue, smoothingValue;
-    QProcess* pExecutedProcess;
+    INPUT_FILE_TYPE inputFileType = INPUT_FILE_TYPE::IMAGE;
+    QProcess* pExecutedProcess = nullptr;
     QString buffer;
     QImage readImage, changedAfterSmoothingImage, changedAfterSharpnessImage;
     std::shared_ptr<PROGRAM_DATA> pProgramData;
-    QString inputImageFilename = "", outputModelFilename, outputFolderPath, inputTextureImageFilename;
+    QString inputDataFilename = "", outputModelFilename, outputFolderPath, inputTextureImageFilename;
     QString imageFileName;
     //Magick::Image inputImageManipulatorPtr;
     //Magick::Image testImage;
@@ -104,6 +110,7 @@ private:
 
     void fillProgramDataStructure();
     void showParameters();
+    QStringList createArgs();
     bool isRequiredFieldsFilled();
     void setSmoothing(double value);
     void setSharpness(double value);
