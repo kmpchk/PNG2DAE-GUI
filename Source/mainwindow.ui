@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Select image</string>
+     <string>Select file</string>
     </property>
    </widget>
    <widget class="QLabel" name="imageViewLabel">
@@ -65,7 +65,7 @@
       </rect>
      </property>
      <property name="maxLength">
-      <number>3</number>
+      <number>5</number>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -116,7 +116,7 @@
       </rect>
      </property>
      <property name="maxLength">
-      <number>3</number>
+      <number>5</number>
      </property>
      <property name="readOnly">
       <bool>true</bool>
@@ -132,7 +132,7 @@
       </rect>
      </property>
      <property name="maxLength">
-      <number>3</number>
+      <number>5</number>
      </property>
      <property name="readOnly">
       <bool>true</bool>
