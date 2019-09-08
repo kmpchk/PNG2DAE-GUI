@@ -24,8 +24,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-CONFIG += qt # debug
+#CONFIG += qt # debug
 
+# static executable
 CONFIG += static
 
 QMAKE_CXXFLAGS += -std=c++0x
