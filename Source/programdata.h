@@ -18,9 +18,9 @@ typedef struct _PROGRAM_DATA
     bool bSmoothingOption = false;
     double dSharpnessCoeff = 0.0;
     bool bSharpnessOption = false;
-    double dZetAxisCoeff = 0.25;
-    double dDimensionCoeff = 0.05;
-    double dXAxisRotateAngle = -90.0;
+    QString dZetAxisCoeff = "0.25";
+    QString dDimensionCoeff = "0.05";
+    QString dXAxisRotateAngle = "-90.0";
 
 } PROGRAM_DATA, *PPROGRAM_DATA;
 
